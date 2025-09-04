@@ -12,5 +12,36 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Hello Pipeline
-      run: echo "Hello Pipeline"
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+
+      - name: Run Core.Tests
+        run: dotnet test .\src\DevOpsDaysTasks.Core.Tests
+
+      - name: Run IntegrationTests
+        run: dotnet test .\src\DevOpsDaysTasks.IntegrationTests
+
+      - name: Publish Release
+        run: dotnet publish -c Release src\DevOpsDaysTasks.UI -o DevOpsDaysTasks /p:Version=2.0.0 /p:VersionName=Bear
+
+      - name: Copy templates
+        run: |
+          mkdir DevOpsDaysTasks/Templates
+          cp workshop_material\default-tasks.xml DevOpsDaysTasks/Templates
+
+      - name: Copy help
+        run: |
+          mkdir DevOpsDaysTasks/Help
+          cp workshop_material/Help.pdf DevOpsDaysTasks/Help
+
+      - name: Sign release
+        run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile .\workshop_material\devopsdays_tasks_codesign.pfx -PfxPassword Password
+
+      - name: Upload release
+        uses: actions/upload-artifact@v4
+        with:
+          name: DevOpsDaysTasks
+          path: DevOpsDaysTasks
+
