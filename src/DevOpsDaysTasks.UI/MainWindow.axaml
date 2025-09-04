@@ -1,0 +1,25 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DevOpsDaysTasks.UI.MainWindow"
+		xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
+		xmlns:models="using:DevOpsDaysTasks.Core.Models"
+		xmlns:ui="using:DevOpsDaysTasks.UI"
+        Width="700" Height="450">
+	<DockPanel Margin="12">
+		<StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8">
+			<Button Content="Add…" Click="OnAdd"/>
+			<Button Content="Add from Templates" Click="OnAddFromTemplates"/>
+			<Button Content="Mark Done" Click="OnMarkDone"/>
+			<Button Content="Mark Undone" Click="OnMarkUndone"/>
+			<Button Content="Remove" Click="OnRemove"/>
+			<Button Content="Help" Click="OnHelp"/>
+		</StackPanel>
+
+		<dg:DataGrid x:Name="Grid" IsReadOnly="True" x:DataType="models:TaskItem">
+			<dg:DataGrid.Columns>
+				<dg:DataGridCheckBoxColumn Header="Done" Binding="{Binding IsDone}" Width="80"/>
+				<dg:DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+			</dg:DataGrid.Columns>
+		</dg:DataGrid>
+	</DockPanel>
+</Window>

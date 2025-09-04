@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <!-- Default, will be overridden by /p:Version=... -->
+    <Version>0.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <InformationalVersion>$(Version)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <!-- Default, will be overridden by /p:VersionName=... -->
+    <VersionName>Dev</VersionName>
+  </PropertyGroup>
+
+  <ItemGroup>
+   <AssemblyAttribute Include="DevOpsDaysTasks.Core.Attributes.VersionNameAttribute">
+    <_Parameter1>$(VersionName)</_Parameter1>
+   </AssemblyAttribute>
+  </ItemGroup>
+</Project>
