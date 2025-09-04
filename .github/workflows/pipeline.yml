@@ -1,0 +1,16 @@
+name: Release Pipeline
+
+on:
+  push: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-release:
+    name: Build/Test/Release
+    runs-on: windows-latest
+
+    steps:
+    - name: Hello Pipeline
+      run: echo "Hello Pipeline"
