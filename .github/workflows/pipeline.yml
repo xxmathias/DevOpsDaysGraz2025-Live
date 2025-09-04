@@ -12,6 +12,7 @@ jobs:
     runs-on: windows-latest
     env:
       CERT_NAME: cert.pfx
+      EXTERNAL_FILES_PATH: externalFiles
 
     steps:
       - uses: actions/checkout@v4
@@ -49,16 +50,22 @@ jobs:
       - name: Publish Release
         run: dotnet publish -c Release src\DevOpsDaysTasks.UI -o DevOpsDaysTasks /p:Version=2.0.0 /p:VersionName=Bear
 
-      # Problem: Where to get the external files from
+      - name: Checkout external files
+        uses: actions/checkout@v4
+        with:
+          repository: martinzimmermann/DevOpsDaysGraz2025-ExternalFiles
+          path: ${{ env.EXTERNAL_FILES_PATH }}
+          #token: ${{ secrets.PAT }} A personal access token (PAT) is necessary for private repositories
+
       - name: Copy templates
         run: |
           mkdir DevOpsDaysTasks/Templates
-          cp workshop_material\default-tasks.xml DevOpsDaysTasks/Templates
+          cp ${{ env.EXTERNAL_FILES_PATH }}\default-tasks.xml DevOpsDaysTasks/Templates
 
       - name: Copy help
         run: |
           mkdir DevOpsDaysTasks/Help
-          cp workshop_material/Help.pdf DevOpsDaysTasks/Help
+          cp ${{ env.EXTERNAL_FILES_PATH }}/Help.pdf DevOpsDaysTasks/Help
 
       - name: Create PFX certificate
         run: |
