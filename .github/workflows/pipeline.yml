@@ -14,7 +14,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-test-release:
@@ -95,3 +95,13 @@ jobs:
           name: DevOpsDaysTasks
           path: DevOpsDaysTasks
 
+      - name: Zip Release
+        if: ${{ inputs.version }}
+        run: Compress-Archive -Path ./DevOpsDaysTasks -DestinationPath DevOpsDaysTasks-${{ inputs.version }}.zip
+
+      - name: GitHub release
+        if: ${{ inputs.version }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          files: DevOpsDaysTasks-${{ inputs.version }}.zip
