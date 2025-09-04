@@ -2,6 +2,16 @@ name: Release Pipeline
 
 on:
   push: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version of the release
+        required: true
+        type: string
+      versionName:
+        description: Version name of the release
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -46,9 +56,11 @@ jobs:
           path: TestResults-IntegrationTests/
         if: ${{ always() }}
 
-      # Problem: `Version` and `VersionName` is hardcoded
       - name: Publish Release
-        run: dotnet publish -c Release src\DevOpsDaysTasks.UI -o DevOpsDaysTasks /p:Version=2.0.0 /p:VersionName=Bear
+        env:
+          VERSION: ${{ inputs.version || '0.0.0' }}
+          VERSION_NAME: ${{ inputs.versionName || 'Dev' }}
+        run: dotnet publish -c Release src\DevOpsDaysTasks.UI -o DevOpsDaysTasks /p:Version=${{ env.VERSION }} /p:VersionName=${{ env.VERSION_NAME }}
 
       - name: Checkout external files
         uses: actions/checkout@v4
