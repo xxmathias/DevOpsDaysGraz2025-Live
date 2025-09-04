@@ -10,6 +10,8 @@ jobs:
   build-test-release:
     name: Build/Test/Release
     runs-on: windows-latest
+    env:
+      CERT_NAME: cert.pfx
 
     steps:
       - uses: actions/checkout@v4
@@ -58,9 +60,14 @@ jobs:
           mkdir DevOpsDaysTasks/Help
           cp workshop_material/Help.pdf DevOpsDaysTasks/Help
 
-      # Problem: Cert (external file) and password hardcoded
+      - name: Create PFX certificate
+        run: |
+          $bas64Pfx = "${{ secrets.SIGN_CERTIFICATE_PFX_BASE64 }}"
+          $encodedBytes = [System.Convert]::FromBase64String($bas64Pfx)
+          Set-Content ${{ env.CERT_NAME }} -Value $encodedBytes -AsByteStream
+
       - name: Sign release
-        run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile .\workshop_material\devopsdays_tasks_codesign.pfx -PfxPassword Password
+        run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile ${{ env.CERT_NAME }} -PfxPassword ${{ secrets.SIGN_CERTIFICATE_PASSWORD }}
 
       # Problem: Only upload to pipeline not to GitHub Releases
       - name: Upload release
