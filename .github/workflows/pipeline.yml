@@ -14,7 +14,7 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-test-release:
@@ -23,6 +23,7 @@ jobs:
     env:
       CERT_NAME: cert.pfx
       EXTERNAL_FILES_PATH: externalFiles
+      RELEASE_ZIP_NAME: DevOpsDaysTasks-${{ inputs.version }}-${{ inputs.versionName }}.zip
 
     steps:
       - uses: actions/checkout@v4
@@ -88,10 +89,19 @@ jobs:
       - name: Sign release
         run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile ${{ env.CERT_NAME }} -PfxPassword ${{ secrets.SIGN_CERTIFICATE_PASSWORD }}
 
-      # Problem: Only upload to pipeline not to GitHub Releases
       - name: Upload release
         uses: actions/upload-artifact@v4
         with:
           name: DevOpsDaysTasks
           path: DevOpsDaysTasks
 
+      - name: Zip Release
+        if: ${{ inputs.version }}
+        run: Compress-Archive -Path ./DevOpsDaysTasks -DestinationPath ${{ env.RELEASE_ZIP_NAME }}
+
+      - name: GitHub release
+        if: ${{ inputs.version }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          files: ${{ env.RELEASE_ZIP_NAME }}
