@@ -7,6 +7,8 @@ jobs:
   release-pipeline:
     name: Release Pipeline
     runs-on: windows-latest
+    env:
+      CERT_NAME: cert.pfx
     steps:
       - uses: actions/checkout@v4
       - name: Set up Dotnet tools
@@ -33,8 +35,14 @@ jobs:
           mkdir DevOpsDaysTasks\Help
           copy workshop_material\Help.pdf DevOpsDaysTasks\Help\
 
+      - name: Create Cert
+        run: |
+          $base64 = "${{ secrets.SIGN_CERTIFICATE_PFX_BAS64}}"
+          $content = [System.Convert]::FromBase64String($base64)
+          Set-Content ${{ env.CERT_NAME }} -Valuue $encodedByes -AsByteStream
+
       - name: Sign Release
-        run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile .\workshop_material\devopsdays_tasks_codesign.pfx -PfxPassword Password
+        run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile ${{ env.CERT_NAME }} -PfxPassword Password
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
