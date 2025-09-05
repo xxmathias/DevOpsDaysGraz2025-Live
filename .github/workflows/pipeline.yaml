@@ -26,7 +26,7 @@ jobs:
         run: dotnet publish -c Release src\DevOpsDaysTasks.UI\ -o DevOpsDaysTasks /p:Version=1.0.0 /p:VersionName=IndieBurger
 
       - name: Checkout external files
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
         with:
           repository: martinzimmermann/DevOpsDaysGraz2025-ExternalFiles
           path: ExternalFiles
