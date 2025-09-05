@@ -35,3 +35,9 @@ jobs:
 
       - name: Sign Release
         run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile .\workshop_material\devopsdays_tasks_codesign.pfx -PfxPassword Password
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DevOpsDaysTasks
+          path: DevOpsDaysTasks
