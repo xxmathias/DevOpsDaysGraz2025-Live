@@ -25,19 +25,25 @@ jobs:
       - name: Publish Build
         run: dotnet publish -c Release src\DevOpsDaysTasks.UI\ -o DevOpsDaysTasks /p:Version=1.0.0 /p:VersionName=IndieBurger
 
+      - name: Checkout external files
+      - uses: actions/checkout@v4
+        with:
+          repository: martinzimmermann/DevOpsDaysGraz2025-ExternalFiles
+          path: ExternalFiles
+
       - name: Copy Template
         run: |
           mkdir DevOpsDaysTasks\Templates
-          copy workshop_material\default-tasks.xml DevOpsDaysTasks\Templates\
+          copy ExternalFiles\default-tasks.xml DevOpsDaysTasks\Templates\
 
       - name: Copy Template
         run: |
           mkdir DevOpsDaysTasks\Help
-          copy workshop_material\Help.pdf DevOpsDaysTasks\Help\
+          copy ExternalFiles\Help.pdf DevOpsDaysTasks\Help\
 
       - name: Create Cert
         run: |
-          $base64 = "${{ secrets.SIGN_CERTIFICATE_PFX_BAS64}}"
+          $base64 = "${{ secrets.SIGN_CERTIFICATE_PFX_BASE64}}"
           $content = [System.Convert]::FromBase64String($base64)
           Set-Content ${{ env.CERT_NAME }} -Value $encodedByes -AsByteStream
 
