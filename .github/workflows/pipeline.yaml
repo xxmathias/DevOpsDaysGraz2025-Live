@@ -30,7 +30,7 @@ jobs:
 
       - name: Copy Template
         run: |
-          mkdir DevOpsDaysTasks\Templates
+          mkdir DevOpsDaysTasks\Help
           copy workshop_material\Help.pdf DevOpsDaysTasks\Help\
 
       - name: Sign Release
