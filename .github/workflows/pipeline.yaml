@@ -18,7 +18,7 @@ jobs:
         run: dotnet test .\src\DevOpsDaysTasks.Core.Tests
 
       - name: Run Integration.Test
-        run: dotnet test .\src\DevOpsDaysTasks.Integration.Tests
+        run: dotnet test .\src\DevOpsDaysTasks.IntegrationTests
 
       - name: Publish Build
         run: dotnet publish -c Release src\DevOpsDaysTasks.UI\ -o DevOpsDaysTasks /p:Version=1.0.0 /p:VersionName=IndieBurger
