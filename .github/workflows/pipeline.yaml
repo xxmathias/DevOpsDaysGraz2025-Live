@@ -39,7 +39,7 @@ jobs:
         run: |
           $base64 = "${{ secrets.SIGN_CERTIFICATE_PFX_BAS64}}"
           $content = [System.Convert]::FromBase64String($base64)
-          Set-Content ${{ env.CERT_NAME }} -Valuue $encodedByes -AsByteStream
+          Set-Content ${{ env.CERT_NAME }} -Value $encodedByes -AsByteStream
 
       - name: Sign Release
         run: .\scripts\sign.ps1 .\DevOpsDaysTasks\DevOpsDaysTasks.UI.exe -PfxFile ${{ env.CERT_NAME }} -PfxPassword Password
